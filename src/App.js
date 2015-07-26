@@ -8,6 +8,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     const vidId = this.randVidId();
+
     this.state = { player: null, vidId };
     player(640 , 390 , vidId).then(player => {
       this.setState({player});
@@ -34,9 +35,14 @@ class App extends Component {
   render () {
     return (
       <div>
-        <div>video {this.state.vidId}</div>
+        <div>
+          video:&nbsp;
+          <a href={`https://www.youtube.com/watch?v=${this.state.vidId}`}>
+            {this.state.vidId}
+          </a>
+        </div>
         <div id="player"></div>
-        <div onClick={this.clicka}>description</div>
+        <div onClick={this.clicka}>Next&nbsp;&gt;&gt;</div>
       </div>
     );
   }

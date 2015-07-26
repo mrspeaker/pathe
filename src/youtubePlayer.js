@@ -27,6 +27,9 @@ const ytPlayer = (w=640, h=390, vidId='RFJ67N-UR5w') => ytPromise.then(() => {
     events: {
       'onReady': onPlayerReady,
       'onStateChange': onPlayerStateChange
+    },
+    playerVars: {
+      controls: 0
     }
   });
 });
