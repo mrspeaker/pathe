@@ -1,5 +1,7 @@
 import React from 'react';
 import jsonp from 'jsonp';
+import qs from 'querystring';
+
 import player from './youtubePlayer';
 
 const { Component } = React;
@@ -12,7 +14,10 @@ class App extends Component {
 
   constructor (props) {
     super(props);
-    const vidId = this.randVidId();
+    const qss = qs.decode(window.location.search);
+    const vid = qss['v'] || qss['?v'];
+
+    const vidId = vid || this.randVidId();
 
     this.state = {
       player: null,
@@ -20,6 +25,12 @@ class App extends Component {
       description: '-',
       vidId
     };
+
+    window.addEventListener('popstate', (e) => {
+      this.loadVid(e.state.vidId);
+    });
+
+
 
     player(640, 390, null, this.stateChange.bind(this)).then(player => {
       this.setState({player});
@@ -29,8 +40,10 @@ class App extends Component {
     this.clicka = this.clicka.bind(this);
   }
 
-  stateChange (a) {
-    console.log(a);
+  stateChange (state) {
+    if (state.data === 0 /* ended */) {
+      this.loadVid(this.randVidId());
+    }
   }
 
   randVidId () {
@@ -43,6 +56,7 @@ class App extends Component {
       videoId: vidId,
       startSeconds:5
     });
+    window.history.pushState({vidId}, vidId, `?v=${vidId}`);
     this.setState({vidId});
 
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${vidId}&key=${APIKEY}&part=snippet&`;

@@ -19,6 +19,7 @@ System.config({
     "babel-runtime": "npm:babel-runtime@5.8.5",
     "core-js": "npm:core-js@0.9.18",
     "jsonp": "npm:jsonp@0.2.0",
+    "querystring": "npm:querystring@0.2.0",
     "react": "npm:react@0.13.3",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
