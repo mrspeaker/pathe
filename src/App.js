@@ -3,6 +3,8 @@ import jsonp from 'jsonp';
 import qs from 'querystring';
 
 import player from './youtubePlayer';
+import GoButton from './GoButton';
+import InfoBox from './InfoBox';
 
 const { Component } = React;
 
@@ -51,20 +53,26 @@ class App extends Component {
 
     player.loadVideoById({
       videoId: vidId,
-      startSeconds:5
+      startSeconds: 3
     });
+
     window.history.pushState({vidId}, vidId, `?v=${vidId}`);
     this.setState({vidId});
+    this.loadVidInfo(vidId);
+  }
 
+  loadVidInfo (vidId) {
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${vidId}&key=${APIKEY}&part=snippet&`;
     jsonp(url, (err, data) => {
-      const {title, description} = data.items[0].snippet;
-      this.setState({
-        title,
-        description: description.replace(/\n\n/g, '\n')
-      });
-    });
 
+      if (data && data.items) {
+        const {title, description} = data.items[0].snippet;
+        this.setState({
+          title,
+          description: description.replace(/\n\n/g, '\n')
+        });
+      }
+    });
   }
 
   loadRandVid () {
@@ -72,21 +80,20 @@ class App extends Component {
   }
 
   render () {
+    const {title, description, vidId} = this.state;
+
     return (
       <div id="app">
         <div>
-          <span className="title">{this.state.title}</span> &nbsp;
-          <a href={`https://www.youtube.com/watch?v=${this.state.vidId}`}>
-            {this.state.vidId}
-          </a>
-          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
+          <span className="title">{title}</span>&nbsp;
+          <a href={`https://www.youtube.com/watch?v=${vidId}`}>{vidId}</a>
+          <GoButton onClick={this.loadRandVid} />
         </div>
         <div id="player"></div>
         <div>
-          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
+          <GoButton onClick={this.loadRandVid} />
         </div>
-        <div></div>
-        <pre className="description">{this.state.description}</pre>
+        <InfoBox content={description} />
       </div>
     );
   }
