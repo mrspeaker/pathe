@@ -8,15 +8,13 @@ const { Component } = React;
 
 const APIKEY = 'AIzaSyBf4tHbkDLYC85PNoFS35GbJIMWtm4NkHw';
 
-//https://www.googleapis.com/youtube/v3/videos?id=BRtHlhORJLA&key=AIzaSyBf4tHbkDLYC85PNoFS35GbJIMWtm4NkHw&part=snippet&
-
 class App extends Component {
 
   constructor (props) {
     super(props);
+
     const qss = qs.decode(window.location.search);
     const vid = qss['v'] || qss['?v'];
-
     const vidId = vid || this.randVidId();
 
     this.state = {
@@ -30,19 +28,17 @@ class App extends Component {
       this.loadVid(e.state.vidId);
     });
 
-
-
     player(640, 390, null, this.stateChange.bind(this)).then(player => {
       this.setState({player});
       this.loadVid(vidId);
     });
 
-    this.clicka = this.clicka.bind(this);
+    this.loadRandVid = this.loadRandVid.bind(this);
   }
 
   stateChange (state) {
     if (state.data === 0 /* ended */) {
-      this.loadVid(this.randVidId());
+      this.loadRandVid();
     }
   }
 
@@ -52,6 +48,7 @@ class App extends Component {
 
   loadVid (vidId) {
     const {player} = this.state;
+
     player.loadVideoById({
       videoId: vidId,
       startSeconds:5
@@ -61,35 +58,32 @@ class App extends Component {
 
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${vidId}&key=${APIKEY}&part=snippet&`;
     jsonp(url, (err, data) => {
-      let {title, description} = data.items[0].snippet;
-      description = description.replace(/\n\n/g, '\n');
+      const {title, description} = data.items[0].snippet;
       this.setState({
         title,
-        description
+        description: description.replace(/\n\n/g, '\n')
       });
     });
 
   }
 
-  clicka () {
-    const {player} = this.state;
-    const vidId = this.randVidId();
-    this.loadVid(vidId);
+  loadRandVid () {
+    this.loadVid(this.randVidId());
   }
 
   render () {
     return (
       <div id="app">
         <div>
-          {this.state.title} &nbsp;
+          <span className="title">{this.state.title}</span> &nbsp;
           <a href={`https://www.youtube.com/watch?v=${this.state.vidId}`}>
             {this.state.vidId}
           </a>
-          <span className="clicker" onClick={this.clicka}>Next&nbsp;&gt;&gt;</span>
+          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
         </div>
         <div id="player"></div>
         <div>
-          <span className="clicker" onClick={this.clicka}>Next&nbsp;&gt;&gt;</span>
+          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
         </div>
         <div></div>
         <pre className="description">{this.state.description}</pre>
