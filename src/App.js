@@ -51,7 +51,7 @@ class App extends Component {
 
     player.loadVideoById({
       videoId: vidId,
-      startSeconds:5
+      startSeconds: 3
     });
     window.history.pushState({vidId}, vidId, `?v=${vidId}`);
     this.setState({vidId});
