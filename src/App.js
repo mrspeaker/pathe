@@ -2,22 +2,18 @@ import React from 'react';
 import jsonp from 'jsonp';
 import qs from 'querystring';
 
+import constants from './constants';
 import player from './youtubePlayer';
 import GoButton from './GoButton';
 import InfoBox from './InfoBox';
 
-const { Component } = React;
-
-const APIKEY = 'AIzaSyBf4tHbkDLYC85PNoFS35GbJIMWtm4NkHw';
-
-class App extends Component {
+class App extends React.Component {
 
   constructor (props) {
     super(props);
 
     const qss = qs.decode(window.location.search);
-    const vid = qss['v'] || qss['?v'];
-    const vidId = vid || this.randVidId();
+    const vidId = qss['v'] || qss['?v'] || this.randVidId();
 
     this.state = {
       player: null,
@@ -45,7 +41,7 @@ class App extends Component {
   }
 
   randVidId () {
-    return window.allVids[Math.random () * 82058 | 0];
+    return window.allVids[Math.random () * (window.allVids.length - 1) | 0];
   }
 
   loadVid (vidId) {
@@ -62,9 +58,9 @@ class App extends Component {
   }
 
   loadVidInfo (vidId) {
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${vidId}&key=${APIKEY}&part=snippet&`;
+    const base = 'https://www.googleapis.com/youtube/v3/videos';
+    const url = `${base}?id=${vidId}&key=${constants.APIKEY}&part=snippet&`;
     jsonp(url, (err, data) => {
-
       if (data && data.items) {
         const {title, description} = data.items[0].snippet;
         this.setState({
@@ -81,18 +77,17 @@ class App extends Component {
 
   render () {
     const {title, description, vidId} = this.state;
+    const ytUrl = `https://www.youtube.com/watch?v=${vidId}`;
 
     return (
       <div id="app">
         <div>
           <span className="title">{title}</span>&nbsp;
-          <a href={`https://www.youtube.com/watch?v=${vidId}`}>{vidId}</a>
+          <a href={ytUrl}>{vidId}</a>
           <GoButton onClick={this.loadRandVid} />
         </div>
         <div id="player"></div>
-        <div>
-          <GoButton onClick={this.loadRandVid} />
-        </div>
+        <GoButton onClick={this.loadRandVid} />
         <InfoBox content={description} />
       </div>
     );
