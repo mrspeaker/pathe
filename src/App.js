@@ -25,7 +25,7 @@ class App extends React.Component {
 
   componentDidMount () {
     const queryString = qs.decode(window.location.search);
-    const initVidID = queryString['v'] || queryString['?v'] || randVids[0];
+    const initVidID = queryString['v'] || queryString['?v'] || randVids[randVids.length - 1];
 
     this.createVidIDStream(initVidID).subscribe(v => {
       this.loadVid(v);
