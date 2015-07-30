@@ -21,6 +21,7 @@ System.config({
     "jsonp": "npm:jsonp@0.2.0",
     "querystring": "npm:querystring@0.2.0",
     "react": "npm:react@0.13.3",
+    "rx": "npm:rx@2.5.3",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
     },
@@ -294,6 +295,9 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.1"
     },
+    "npm:rx@2.5.3": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
+    },
     "npm:sha.js@2.4.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
@@ -336,3 +340,4 @@ System.config({
     }
   }
 });
+

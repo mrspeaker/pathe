@@ -1,60 +1,73 @@
 import React from 'react';
 import jsonp from 'jsonp';
 import qs from 'querystring';
+import Rx from 'rx';
 
 import constants from './constants';
 import player from './youtubePlayer';
-import GoButton from './GoButton';
+import Nav from './Nav';
 import InfoBox from './InfoBox';
+
+import rand from './rand';
+const randVids = rand(window.allVids);
 
 class App extends React.Component {
 
   constructor (props) {
     super(props);
 
-    const qss = qs.decode(window.location.search);
-    const vidId = qss['v'] || qss['?v'] || this.randVidId();
-
     this.state = {
-      player: null,
+      player: player(640, 390, null, this.stateChange.bind(this)),
       title: '-',
       description: '-',
-      vidId
     };
+  }
 
-    window.addEventListener('popstate', (e) => {
-      this.loadVid(e.state.vidId);
+  componentDidMount () {
+    const queryString = qs.decode(window.location.search);
+    const initVidID = queryString['v'] || queryString['?v'] || randVids[0];
+
+    this.createVidIDStream(initVidID).subscribe(v => {
+      this.loadVid(v);
+      this.loadVidInfo(v);
+      this.setState({vidId: v});
+      window.history.pushState({v}, v, `?v=${v}`);
     });
+  }
 
-    player(640, 390, null, this.stateChange.bind(this)).then(player => {
-      this.setState({player});
-      this.loadVid(vidId);
-    });
+  createVidIDStream (initVidId) {
+    const next = Rx.Observable
+      .fromEvent(document.querySelectorAll('.next'), 'click')
+      .map(() => 1);
 
-    this.loadRandVid = this.loadRandVid.bind(this);
+    const prev = Rx.Observable
+      .fromEvent(document.querySelectorAll('.prev'), 'click')
+      .map(() => -1);
+
+    const popstates = Rx.Observable.fromEvent(window, 'popstate')
+      .map(() => -1);
+
+    const navs = Rx.Observable.merge(next, prev, popstates)
+      .scan(0, (ac, e) => Math.max(0, ac + e))
+      .startWith(0);
+
+    return navs.map(i => i <= 0 ? initVidId : randVids[i - 1]);
   }
 
   stateChange (state) {
     if (state.data === 0 /* ended */) {
-      this.loadRandVid();
+      // TODO: add to stream properly!
+      document.querySelector('.next').click();
     }
-  }
-
-  randVidId () {
-    return window.allVids[Math.random () * (window.allVids.length - 1) | 0];
   }
 
   loadVid (vidId) {
     const {player} = this.state;
 
-    player.loadVideoById({
+    player.then(p => p.loadVideoById({
       videoId: vidId,
       startSeconds: 3
-    });
-
-    window.history.pushState({vidId}, vidId, `?v=${vidId}`);
-    this.setState({vidId});
-    this.loadVidInfo(vidId);
+    }));
   }
 
   loadVidInfo (vidId) {
@@ -71,10 +84,6 @@ class App extends React.Component {
     });
   }
 
-  loadRandVid () {
-    this.loadVid(this.randVidId());
-  }
-
   render () {
     const {title, description, vidId} = this.state;
     const ytUrl = `https://www.youtube.com/watch?v=${vidId}`;
@@ -84,10 +93,10 @@ class App extends React.Component {
         <div>
           <span className="title">{title}</span>&nbsp;
           <a href={ytUrl}>{vidId}</a>
-          <GoButton onClick={this.loadRandVid} />
+          <Nav />
         </div>
         <div id="player"></div>
-        <GoButton onClick={this.loadRandVid} />
+        <Nav />
         <InfoBox content={description} />
       </div>
     );
