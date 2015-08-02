@@ -8,7 +8,7 @@ class Player extends Component {
   constructor (props) {
     super(props);
 
-    this.player = player(640, 390, null, this.vidStateChange.bind(this));
+    this.player = player(700, 450, null, this.vidStateChange.bind(this));
     this.loadVid(props.vidID);
   }
 

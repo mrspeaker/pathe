@@ -1,0 +1,55 @@
+html, body { min-height: 100%; }
+body {
+  font-family: Georgia, helvetica, arial, sans-serif;
+  font-size: 1em;
+  background-color: #efefef;
+  color: #2b2b2b;
+  margin: 0;
+}
+a {
+  color: #6183A4;
+}
+#container {
+  width: 700px;
+  margin: auto;
+  padding: 15px;
+  background-color: #fefefe;
+  box-shadow: 0 0 20px #ccc;
+}
+
+#app {
+  width: 100%;
+  padding-bottom: 10px;
+}
+.header {
+  display: flex;
+  flex-direction: row;
+}
+.title {
+  display:block;
+
+  width: 645px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.description {
+  white-space: pre-wrap;       /* CSS 3 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  font-family: Georgia;
+  min-height:300px;
+  width: 100%;
+}
+.nav {
+  float: right;
+}
+.next, .prev {
+  color: #5a0;
+  cursor: pointer;
+}
+.title {
+  font-weight: bold;
+}
+#credits {
+  float: right;
+}

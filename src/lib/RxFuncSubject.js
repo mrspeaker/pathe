@@ -1,6 +1,18 @@
 import Rx from 'rx';
 
-export default () => {
+/*
+  Plain functions as Subjects. When invoked, it calls the internal
+  Subject's `onNext` method:
+
+    const clicker = RxFuncSubject();
+    clicker.subscribe(() => console.log('clicked!'));
+    clicker(); // clicked!
+
+  Made to be used in a react component, without using real DOM events:
+
+    <MyComponent onClick={clicker} />
+*/
+const RxFuncSubject = () => {
   const subject = Object.assign(
     (...args) => subject.onNext(...args),
     Rx.Observable.prototype,
@@ -10,3 +22,5 @@ export default () => {
 
   return subject;
 };
+
+export default RxFuncSubject;

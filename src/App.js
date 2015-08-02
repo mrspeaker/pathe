@@ -69,6 +69,7 @@ class App extends React.Component {
       title,
       description: description.replace(/\n\n/g, '\n')
     });
+    document.title = title;
   }
 
   render () {
@@ -77,14 +78,17 @@ class App extends React.Component {
 
     return (
       <div id="app">
-        <div>
-          <span className="title">{title}</span>&nbsp;
-          <a href={`https://www.youtube.com/watch?v=${vidId}`}>{vidId}</a>
+        <div className="header">
+          <span>🎥</span>&nbsp;
+          <a className="title" href={`https://www.youtube.com/watch?v=${vidId}`}>{title}</a>
           <Nav onNext={next} onPrev={prev}/>
         </div>
         <Player vidID={vidId} onEnd={end} onInfoLoad={this.onInfoLoad} />
         <Nav onNext={next} onPrev={prev}/>
         <InfoBox content={description} />
+        <div id="credits">
+          by <a href="http://www.mrspeaker.net/">Mr Speaker</a>
+        </div>
       </div>
     );
   }
