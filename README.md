@@ -1,6 +1,6 @@
 # British Pathé random video viewer
 
-<img width="336" alt="img" src="https://cloud.githubusercontent.com/assets/129330/9027930/a9cbb9e4-3935-11e5-98f1-55b9b98f54ed.png">
+[![Random video viewer](https://cloud.githubusercontent.com/assets/129330/9027930/a9cbb9e4-3935-11e5-98f1-55b9b98f54ed.png "Random Video Viewer")](http://mrspeaker.github.io/pathe/)
 
 Check out the ["random video viewer"](http://mrspeaker.github.io/pathe/) online. It endlessly plays random videos from the 82058 videos made available by British Pathé. 
 
