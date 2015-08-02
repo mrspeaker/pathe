@@ -17,7 +17,9 @@ const ytPlayer = (w=640, h=390, vidId, onStateChange) => ytPromise.then(() => ne
       'onStateChange': onStateChange || (() => {})
     },
     playerVars: {
-      controls: 1
+      controls: 1,
+      autohide: 1,
+      rel: 0
     }
   };
   if (vidId) options.videoId = `${vidId}`;

@@ -1,92 +1,94 @@
 import React from 'react';
-import jsonp from 'jsonp';
-import qs from 'querystring';
+import querystring from 'querystring';
+import Rx from 'rx';
+import RxFunc from './lib/RxFuncSubject';
+import rand from './lib/rand';
 
-import player from './youtubePlayer';
+import Nav from './Nav';
+import InfoBox from './InfoBox';
+import Player from './Player';
 
-const { Component } = React;
+// TODO: Randomizes the huge global array of vid ids. Fix this, eh.
+const randVids = rand(window.allVids);
 
-const APIKEY = 'AIzaSyBf4tHbkDLYC85PNoFS35GbJIMWtm4NkHw';
-
-class App extends Component {
+class App extends React.Component {
 
   constructor (props) {
     super(props);
 
-    const qss = qs.decode(window.location.search);
-    const vid = qss['v'] || qss['?v'];
-    const vidId = vid || this.randVidId();
+    const qs = querystring.decode(window.location.search);
+    const vidId = qs['v'] || qs['?v'] || randVids[randVids.length - 1];
 
     this.state = {
-      player: null,
       title: '-',
       description: '-',
       vidId
     };
 
-    window.addEventListener('popstate', (e) => {
-      this.loadVid(e.state.vidId);
-    });
+    this.handlers = {
+      next: RxFunc(),
+      prev: RxFunc(),
+      end: RxFunc()
+    };
 
-    player(640, 390, null, this.stateChange.bind(this)).then(player => {
-      this.setState({player});
-      this.loadVid(vidId);
-    });
-
-    this.loadRandVid = this.loadRandVid.bind(this);
+    this.stream = this.createVidIDStream(vidId);
+    this.onInfoLoad = this.onInfoLoad.bind(this);
   }
 
-  stateChange (state) {
-    if (state.data === 0 /* ended */) {
-      this.loadRandVid();
-    }
+  componentDidMount () {
+    this.stream.subscribe(v => this.onVideoChanged(v));
   }
 
-  randVidId () {
-    return window.allVids[Math.random () * 82058 | 0];
+  createVidIDStream (initVidId) {
+    const {next, prev, end} = this.handlers;
+    const fwd = () => +1;
+    const back = () => -1;
+
+    return Rx.Observable.merge(
+      next.map(fwd),
+      prev.map(back),
+      end.map(fwd),
+      Rx.Observable.fromEvent(window, 'popstate').map(back))
+        .scan(0, (ac, e) => Math.max(0, ac + e))
+        .startWith(0)
+        .map(i => i == 0 ? initVidId : randVids[i - 1]);
   }
 
-  loadVid (vidId) {
-    const {player} = this.state;
-
-    player.loadVideoById({
-      videoId: vidId,
-      startSeconds: 3
-    });
-    window.history.pushState({vidId}, vidId, `?v=${vidId}`);
-    this.setState({vidId});
-
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${vidId}&key=${APIKEY}&part=snippet&`;
-    jsonp(url, (err, data) => {
-      const {title, description} = data.items[0].snippet;
-      this.setState({
-        title,
-        description: description.replace(/\n\n/g, '\n')
-      });
+  onVideoChanged (v) {
+    this.setState({
+      title: '...loading...',
+      description: '',
+      vidId: v
     });
 
+    window.history.pushState({v}, v, `?v=${v}`);
   }
 
-  loadRandVid () {
-    this.loadVid(this.randVidId());
+  onInfoLoad ({title, description}) {
+    this.setState({
+      title,
+      description: description.replace(/\n\n/g, '\n')
+    });
+    document.title = title;
   }
 
   render () {
+    const {title, description, vidId} = this.state;
+    const {next, prev, end} = this.handlers;
+
     return (
       <div id="app">
-        <div>
-          <span className="title">{this.state.title}</span> &nbsp;
-          <a href={`https://www.youtube.com/watch?v=${this.state.vidId}`}>
-            {this.state.vidId}
-          </a>
-          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
+        <div className="header">
+          <span>🎥</span>&nbsp;
+          <a className="title" href={`https://www.youtube.com/watch?v=${vidId}`}>{title}</a>
+          <Nav onNext={next} onPrev={prev}/>
         </div>
-        <div id="player"></div>
-        <div>
-          <span className="clicker" onClick={this.loadRandVid}>Next&nbsp;&gt;&gt;</span>
+        <Player vidID={vidId} onEnd={end} onInfoLoad={this.onInfoLoad} />
+        <Nav onNext={next} onPrev={prev}/>
+        <InfoBox content={description} />
+        <div id="credits">
+          by <a href="http://www.mrspeaker.net/">Mr Speaker</a>
         </div>
-        <div></div>
-        <pre className="description">{this.state.description}</pre>
       </div>
     );
   }
