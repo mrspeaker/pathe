@@ -10,4 +10,4 @@ The code is all ES6, built with [jspm.io](http://jspm.io/). To build, `jspm inst
 
 ## Notes
 
-This is a React app that uses RxJS to [create and consume a stream of video ids](https://github.com/mrspeaker/pathe/blob/4a4321d3ca8936ab5b5a96e632a0a940847f2d9b/src/App.js#L47) based on button clicks & pop state events.
+This is a [React](https://github.com/facebook/react) app that uses [RxJS](https://github.com/Reactive-Extensions/RxJS) to [create and consume a stream of video ids](https://github.com/mrspeaker/pathe/blob/4a4321d3ca8936ab5b5a96e632a0a940847f2d9b/src/App.js#L47) based on button clicks & pop state events.
