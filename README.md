@@ -6,7 +6,7 @@ Check out the ["random video viewer"](http://mrspeaker.github.io/pathe/) online.
 
 ## Building
 
-The code is all ES6, built with [jspm.io](http://jspm.io/). To build, `jspm install`.
+The code is all ES6, built with [jspm.io](http://jspm.io/). To build, `jspm install`. The most interestin' place to start is [App.js](https://github.com/mrspeaker/pathe/blob/master/src/App.js)
 
 ## Notes
 
