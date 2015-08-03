@@ -87,7 +87,7 @@ class App extends React.Component {
         <Nav onNext={next} onPrev={prev}/>
         <InfoBox content={description} />
         <div id="credits">
-          by <a href="http://www.mrspeaker.net/">Mr Speaker</a>
+            <a href="https://github.com/mrspeaker/pathe" title="Source on github">Code</a> by <a href="http://www.mrspeaker.net/">Mr Speaker</a>
         </div>
       </div>
     );

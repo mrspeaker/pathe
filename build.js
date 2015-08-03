@@ -22143,7 +22143,12 @@ System.register('src/App.js', ['npm:babel-runtime@5.8.5/helpers/get.js', 'npm:ba
               React.createElement(
                 'div',
                 { id: "credits" },
-                'by ',
+                React.createElement(
+                  'a',
+                  { href: "https://github.com/mrspeaker/pathe", title: "Source on github" },
+                  'Code'
+                ),
+                ' by ',
                 React.createElement(
                   'a',
                   { href: "http://www.mrspeaker.net/" },

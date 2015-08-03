@@ -19,7 +19,7 @@ a {
 
 #app {
   width: 100%;
-  padding-bottom: 10px;
+  padding-bottom: 7px;
 }
 .header {
   display: flex;
@@ -52,4 +52,5 @@ a {
 }
 #credits {
   float: right;
+  font-size: 0.8em;
 }
