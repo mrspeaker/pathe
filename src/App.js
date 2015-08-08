@@ -20,8 +20,8 @@ class App extends React.Component {
     const vidId = qs['v'] || qs['?v'] || randVids[randVids.length - 1];
 
     this.state = {
-      title: '-',
-      description: '-',
+      title: '',
+      description: '...',
       vidId
     };
 
