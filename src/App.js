@@ -36,7 +36,7 @@ class App extends React.Component {
   }
 
   componentDidMount () {
-    this.stream.subscribe(v => this.onVideoChanged(v));
+    this.stream.subscribe(this.onVideoChanged);
   }
 
   createVidIDStream (initVidId) {

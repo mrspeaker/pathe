@@ -42,6 +42,10 @@ a {
 }
 .nav {
   float: right;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .next, .prev {
   color: #5a0;
