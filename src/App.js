@@ -8,8 +8,6 @@ import Nav from './Nav';
 import InfoBox from './InfoBox';
 import Player from './Player';
 
-const randVids = ;
-
 class App extends React.Component {
 
   constructor (props) {
