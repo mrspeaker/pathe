@@ -8,15 +8,13 @@ import Nav from './Nav';
 import InfoBox from './InfoBox';
 import Player from './Player';
 
-const randVids = ;
-
 class App extends React.Component {
 
   constructor (props) {
     super(props);
 
     // TODO: Randomizes the huge global array of vid ids. Fix this, eh.
-    this.randVids = rand(window.allVids)
+    this.randVids = rand(window.allVids);
 
     const qs = querystring.decode(window.location.search);
     const vidId = qs['v'] || qs['?v'] || this.randVids[this.randVids.length - 1];
