@@ -8,16 +8,18 @@ import Nav from './Nav';
 import InfoBox from './InfoBox';
 import Player from './Player';
 
-// TODO: Randomizes the huge global array of vid ids. Fix this, eh.
-const randVids = rand(window.allVids);
+const randVids = ;
 
 class App extends React.Component {
 
   constructor (props) {
     super(props);
 
+    // TODO: Randomizes the huge global array of vid ids. Fix this, eh.
+    this.randVids = rand(window.allVids)
+
     const qs = querystring.decode(window.location.search);
-    const vidId = qs['v'] || qs['?v'] || randVids[randVids.length - 1];
+    const vidId = qs['v'] || qs['?v'] || this.randVids[this.randVids.length - 1];
 
     this.state = {
       title: '',
@@ -51,7 +53,7 @@ class App extends React.Component {
       Rx.Observable.fromEvent(window, 'popstate').map(back))
         .scan(0, (ac, e) => Math.max(0, ac + e))
         .startWith(0)
-        .map(i => i == 0 ? initVidId : randVids[i - 1]);
+        .map(i => i == 0 ? initVidId : this.randVids[i - 1]);
   }
 
   onVideoChanged (v) {
